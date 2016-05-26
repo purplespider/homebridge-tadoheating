@@ -36,7 +36,7 @@ TadoAccessory.prototype.getServices = function() {
     thermostatService.getCharacteristic(Characteristic.TargetTemperature)
         .setProps({
             maxValue: 30,
-            minValue: 18,
+            minValue: 5,
             minStep: 1
         })
 
@@ -62,7 +62,7 @@ TadoAccessory.prototype.getServices = function() {
     thermostatService.getCharacteristic(Characteristic.TargetTemperature)
         .setProps({
             maxValue: 30,
-            minValue: 18,
+            minValue: 5,
             minStep: 1
         })
         .on('get', this.getTargetTemperature.bind(this));
@@ -176,13 +176,19 @@ TadoAccessory.prototype.getTargetTemperature = function(callback) {
         //the whole response has been recieved, so we just print it out here
         response.on('end', function() {
             var obj = JSON.parse(str);
-            var targetTemperature = obj.setting.temperature.celsius;
+
+            var targetTemperature = 5;
+            if (obj.setting.power === 'ON') {
+                var targetTemperature = obj.setting.temperature.celsius;
+            }
+
+            
             
             accessory.log("Target temperature is " + targetTemperature + "ºC");
             callback(null, targetTemperature);
         });        
     }
-    
+
     https.request(options, responseFunction).end();
 }
 
