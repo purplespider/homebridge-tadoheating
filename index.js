@@ -224,8 +224,13 @@ TadoAccessory.prototype.getCurrentRelativeHumidity = function(callback) {
         //the whole response has been recieved, so we just print it out here
         response.on('end', function() {
             var obj = JSON.parse(str);
-            accessory.log("Humidity is " + obj.sensorDataPoints.humidity.percentage + "%");
-            callback(null, obj.sensorDataPoints.humidity.percentage);
+            var humidity = 0;
+            if (obj.sensorDataPoints.humidity) {
+                humidity = obj.sensorDataPoints.humidity.percentage;
+            }
+
+            accessory.log("Humidity is " + humidity + "%");
+            callback(null, humidity);
         });
     };
 
