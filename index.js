@@ -119,6 +119,8 @@ TadoAccessory.prototype.getCurrentHeatingCoolingState = function(callback) {
             accessory.log("Current state is " + obj.setting.power);
             if (JSON.stringify(obj.setting.power).match("OFF")) {
                 callback(null, Characteristic.CurrentHeatingCoolingState.OFF);
+            } else if (obj.activityDataPoints.heatingPower.percentage == 0) {
+              callback(null, Characteristic.CurrentHeatingCoolingState.OFF);
             } else {
                 callback(null, Characteristic.CurrentHeatingCoolingState.HEAT);
             }
